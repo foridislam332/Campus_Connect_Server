@@ -27,6 +27,7 @@ async function run() {
 
         const collegesCollection = client.db('campus_connect').collection('colleges');
         const myCollegeCollection = client.db('campus_connect').collection('my_college');
+        const usersCollection = client.db('campus_connect').collection('users');
         const categoriesCollection = client.db('campus_connect').collection('categories');
         const researchPaperCollection = client.db('campus_connect').collection('research_paper');
         const reviewsCollection = client.db('campus_connect').collection('reviews');
@@ -43,6 +44,38 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             const result = await collegesCollection.findOne(query)
             res.send(result)
+        });
+
+        // get users
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await usersCollection.findOne(query);
+            res.send(result);
+        });
+
+        // post users
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.send(result);
+        });
+
+        // update users
+        app.patch('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const updateData = req.body;
+            const updateDoc = {
+                $set: {
+                    name: updateData.name,
+                    photo: updateData.photo,
+                    university: updateData.university,
+                    address: updateData.address,
+                }
+            };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.send(result);
         });
 
         // get categories
