@@ -102,13 +102,20 @@ async function run() {
             res.send(result);
         });
 
+        // post reviews
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review);
+            res.send(result);
+        });
+
         // get my college
         app.get('/my_college', async (req, res) => {
             const result = await myCollegeCollection.find().toArray();
             res.send(result);
         });
 
-        // get reviews
+        // post my college
         app.post('/my_college', async (req, res) => {
             const newCollege = req.body;
             const result = await myCollegeCollection.insertOne(newCollege);
