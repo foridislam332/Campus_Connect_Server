@@ -110,8 +110,10 @@ async function run() {
         });
 
         // get my college
-        app.get('/my_college', async (req, res) => {
-            const result = await myCollegeCollection.find().toArray();
+        app.get('/my_college/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { candidateEmail: email };
+            const result = await myCollegeCollection.find(query).toArray();
             res.send(result);
         });
 
