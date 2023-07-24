@@ -34,7 +34,17 @@ async function run() {
 
         // get colleges
         app.get('/colleges', async (req, res) => {
-            const result = await collegesCollection.find().toArray();
+            const searchTerm = req.query.search;
+            console.log(searchTerm)
+
+            let cursor;
+            if (searchTerm) {
+                cursor = collegesCollection.find({ collegeName: { $regex: searchTerm, $options: 'i' } });
+            } else {
+                cursor = collegesCollection.find();
+            }
+
+            const result = await cursor.toArray();
             res.send(result);
         });
 
